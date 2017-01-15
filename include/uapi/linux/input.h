@@ -163,6 +163,23 @@ struct input_keymap_entry {
 #define EVIOCSCLOCKID		_IOW('E', 0xa0, int)			/* Set clockid to be used for timestamps */
 
 /*
+ * Device properties and quirks
+ */
+
+#define KEY_NAVI_RIGHT  249
+#define KEY_NAVI_LEFT   254
+#define KEY_NAVI_LONG   183
+
+#define KEY_GESTURE_C  0x21b
+#define KEY_GESTURE_LR 0x21c
+#define KEY_GESTURE_RL 0x21d
+#define KEY_GESTURE_DT 0x21e
+#define KEY_GESTURE_V  0x21f
+#define KEY_GESTURE_E  0x220
+#define KEY_GESTURE_M  0x221
+#define KEY_GESTURE_W  0x222
+
+/*
  * IDs.
  */
 
