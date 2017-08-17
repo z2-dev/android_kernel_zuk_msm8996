@@ -1147,11 +1147,7 @@
 };
 
 &pmi8994_haptics {
-#ifdef CONFIG_PRODUCT_Z2_ROW
 	status = "okay";   /* have to be okay for suspend current decrease 2mA */
-#else
-	status = "okay";
-#endif
 };
 
 &flash_led {
