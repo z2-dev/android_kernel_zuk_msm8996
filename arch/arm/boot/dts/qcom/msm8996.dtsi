@@ -177,11 +177,11 @@
 			no-map;
 			reg = <0 0x8ea00000 0 0x2d00000>;
 		};
-
-		pstore_mem: pstore_region@9ff00000 {
-			compatible = "removed-dma-pool";
+        
+		ramoops_mem: ramoops_mem_region {
 			no-map;
-			reg = <0 0x9ff00000 0 0x100000>;
+			reg = <0 0x91500000 0 0x00100000>;
+			label = "ramoops_mem";
 		};
 
 		adsp_mem: adsp_region {
@@ -270,6 +270,21 @@
 				"apc0-l2-spm",
 				"apc1-l2-spm";
 		qcom,clock-source-override;
+	};
+    
+	ramoops {
+		compatible = "ramoops";
+		status = "ok";
+
+		android,ramoops-buffer-start = <0x91500000>;
+		android,ramoops-buffer-size =  <0x100000>;
+		android,ramoops-console-size = <0x60000>;
+		android,ramoops-record-size = <0x10000>;
+		android,ramoops-ftrace-size = <0x10000>;
+		android,ramoops-pmsg-size = <0x20000>;
+		android,ramoops-dump-oops = <0x1>;
+
+		linux,contiguous-region = <&ramoops_mem>;
 	};
 
 	intc: interrupt-controller@09bc0000 {
