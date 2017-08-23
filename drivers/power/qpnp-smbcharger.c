@@ -58,12 +58,7 @@
 #ifdef CONFIG_PRODUCT_Z2_PLUS
 #define SUPPORT_ONLY_5V_CHARGER
 #endif
-#ifdef CONFIG_PRODUCT_Z2_X
-//#define SUPPORT_LENUK_STEP_CHARGE
-#define LENUK_STEP_CHARGE_VOLTAGE		4020000
-#define LENUK_STEP_CHARGE_FCC			1900
-#endif
-#if defined CONFIG_PRODUCT_Z2_PLUS || defined CONFIG_PRODUCT_Z2_X
+#if defined CONFIG_PRODUCT_Z2_PLUS
 #define SUPPORT_LENUK_WIRE_CHARGER
 #endif
 #define SUPPORT_LENUK_BOOTUP_ICL
@@ -450,9 +445,6 @@ enum fcc_voters {
 #endif
 #ifdef SUPPORT_CALL_ON_FCC_OP
 	CALL_ON_FCC_VOTER,
-#endif
-#ifdef CONFIG_PRODUCT_Z2_X
-	MAX_CURRENT_FCC_VOTER,
 #endif
 #ifdef SUPPORT_TEHRMAL_MITIGATION_WITH_FCC
 	THERMAL_MITIGATION_FCC_VOTER,
@@ -3855,10 +3847,6 @@ static void smbchg_jeita_temp_monitor_work(struct work_struct *work)
 				struct smbchg_chip,
 				jeita_temp_monitor_work.work);
 
-#ifdef CONFIG_PRODUCT_Z2_X
-#define FCC_MA_SWITCH_THRESHOLD 4000000
-	int battery_uv_now = get_prop_batt_voltage_now(chip);
-#endif
 	int temp = get_prop_batt_temp(chip), rc;
 #ifdef SUPPORT_QPNP_USBIN_MONITOR
 	int fcc_ma = get_effective_result_locked(chip->fcc_votable);
@@ -3883,16 +3871,6 @@ static void smbchg_jeita_temp_monitor_work(struct work_struct *work)
 	smbchg_get_usbin_uv(chip);
 #endif
 
-#ifdef CONFIG_PRODUCT_Z2_X
-	if(battery_uv_now < FCC_MA_SWITCH_THRESHOLD){
-		vote(chip->fcc_votable, BATT_TYPE_FCC_VOTER, false,
-			0);
-		vote(chip->fcc_votable, MAX_CURRENT_FCC_VOTER, true,
-			2400);
-	}else
-		vote(chip->fcc_votable, BATT_TYPE_FCC_VOTER, true,
-			2000);
-#endif
 	if (is_usb_present(chip)
 			&& (POWER_SUPPLY_STATUS_FULL == get_prop_batt_status(chip))
 			&& (get_prop_batt_capacity(chip) != BATT_FULL_CAPACITY)) {

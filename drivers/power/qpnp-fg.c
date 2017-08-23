@@ -43,14 +43,10 @@
 #define SUPPORT_CALL_POWER_OP
 #define SUPPORT_SOC_SHOW_OPTIMIZATION
 #define SUPPORT_CPU_TEMP_MONITOR
-#if defined CONFIG_PRODUCT_Z2_PLUS || defined CONFIG_PRODUCT_Z2_X || defined CONFIG_PRODUCT_Z2_ROW
+#if defined CONFIG_PRODUCT_Z2_PLUS || defined CONFIG_PRODUCT_Z2_ROW
 #define SUPPORT_LENUK_BATTERY_ID_ALGO
 #endif
 //#define SUPPORT_QPNP_NOISE_LOG
-
-#ifdef CONFIG_PRODUCT_Z2_X
-#define SUPPORT_LENUK_THERMAL_COEFF
-#endif
 
 #ifdef SUPPORT_CPU_TEMP_MONITOR
 #include <linux/msm_tsens.h>
@@ -61,9 +57,6 @@
 #if defined CONFIG_PRODUCT_Z2_ROW
 #define BATT_TEMP_FLOAT_VALUE          10
 #define BATT_TEMP_POWER_OFF_VALUE      610
-#elif defined CONFIG_PRODUCT_Z2_X
-#define BATT_TEMP_FLOAT_VALUE          0
-#define BATT_TEMP_POWER_OFF_VALUE      580
 #else
 #define BATT_TEMP_FLOAT_VALUE          20
 #define BATT_TEMP_POWER_OFF_VALUE      620
@@ -288,11 +281,6 @@ static struct fg_mem_setting settings[FG_MEM_SETTING_MAX] = {
 	SETTING(SOFT_HOT,        0x454,   1,      460),
 	SETTING(HARD_COLD,       0x454,   2,      10),
 	SETTING(HARD_HOT,        0x454,   3,      510),
-#elif defined CONFIG_PRODUCT_Z2_X
-	SETTING(SOFT_COLD,       0x454,   0,      150),
-	SETTING(SOFT_HOT,        0x454,   1,      450),
-	SETTING(HARD_COLD,       0x454,   2,      0),
-	SETTING(HARD_HOT,        0x454,   3,      500),
 #else
 	SETTING(SOFT_COLD,       0x454,   0,      170),
 	SETTING(SOFT_HOT,        0x454,   1,      470),
@@ -6578,7 +6566,7 @@ fail:
 #ifdef SUPPORT_LENUK_BATTERY_ID_ALGO
 static int batt_id_is_vaild(int bid)
 {
-#if defined CONFIG_PRODUCT_Z2_PLUS || defined CONFIG_PRODUCT_Z2_X
+#if defined CONFIG_PRODUCT_Z2_PLUS
 	if (((bid >= 1000) && (bid < 20000))
 			|| ((bid >= 20000) && (bid < 80000)))
 #else
@@ -6640,7 +6628,7 @@ wait:
 	  * Z2_X battery capacity is 3100mAH,
 	  * margin of error is 300mAH
 	  */
-#if defined CONFIG_PRODUCT_Z2_PLUS || defined CONFIG_PRODUCT_Z2_ROW || defined CONFIG_PRODUCT_Z2_X
+#if defined CONFIG_PRODUCT_Z2_PLUS || defined CONFIG_PRODUCT_Z2_ROW
 #ifdef 	CONFIG_PRODUCT_Z2_PLUS
 		threshold_mah_max = 3800000;
 		threshold_mah_min = 3200000;
@@ -6648,10 +6636,6 @@ wait:
 #ifdef 	CONFIG_PRODUCT_Z2_ROW
 		threshold_mah_max = 3300000;
 		threshold_mah_min = 2700000;
-#endif
-#ifdef 	CONFIG_PRODUCT_Z2_X
-		threshold_mah_max = 3400000;
-		threshold_mah_min = 2800000;
 #endif
 #endif
 
@@ -6828,7 +6812,7 @@ wait:
 					PROFILE_COMPARE_LEN) == 0;
 	if (reg & PROFILE_INTEGRITY_BIT) {
 		fg_cap_learning_load_data(chip);
-#if defined CONFIG_PRODUCT_Z2_PLUS || defined CONFIG_PRODUCT_Z2_ROW || defined CONFIG_PRODUCT_Z2_X
+#if defined CONFIG_PRODUCT_Z2_PLUS || defined CONFIG_PRODUCT_Z2_ROW
 		if ((chip->learning_data.learned_cc_uah < threshold_mah_min) ||
 			(chip->learning_data.learned_cc_uah > threshold_mah_max)) {
 			pr_info("Battery total capability not normal range, clearing data and reset FG\n");

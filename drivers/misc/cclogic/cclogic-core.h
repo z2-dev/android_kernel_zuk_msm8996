@@ -154,9 +154,6 @@ enum cclogic_func_type {
 	CCLOGIC_FUNC_USB,
 	CCLOGIC_FUNC_AUDIO,
 	CCLOGIC_FUNC_UART,
-#ifdef CONFIG_PRODUCT_Z2_X
-	CCLOGIC_FUNC_OTG,
-#endif
 };
 
 

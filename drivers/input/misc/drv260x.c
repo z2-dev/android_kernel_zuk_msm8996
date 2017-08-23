@@ -375,19 +375,6 @@ static void drv260x_close(struct input_dev *input)
 			"Failed to enter standby mode: %d\n", error);
 }
 
-#ifdef CONFIG_PRODUCT_Z2_X
-static const struct reg_default drv260x_lra_cal_regs[] = {
-	{0x16, 0x52},
-	{0x17, 0xff},
-	{0x18, 0x0b},
-	{0x19, 0xcb},
-	{0x1a, 0xb7},
-	{0x1b, 0x94},
-	{0x1c, 0xf5},
-	{0x1d, 0xa8},
-	{0x1e, 0x20},
-};
-#else
 static const struct reg_default drv260x_lra_cal_regs[] = {
 	{0x16, 0x2d},
 	{0x17, 0x9b},
@@ -401,7 +388,6 @@ static const struct reg_default drv260x_lra_cal_regs[] = {
 	{0x1d, 0xa8},
 	{0x1e, 0x20},
 };
-#endif
 
 static const struct reg_default drv260x_lra_init_regs[] = {
 	{ DRV260X_MODE, DRV260X_RT_PLAYBACK },

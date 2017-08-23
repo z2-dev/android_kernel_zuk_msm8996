@@ -206,11 +206,7 @@
 #ifdef CONFIG_QPNP_SMBCHARGER_HW
 			qcom,fastchg-current-ma = <2000>;
 #else
-#ifdef CONFIG_PRODUCT_Z2_X
-			qcom,fastchg-current-ma = <2000>;
-#else
 			qcom,fastchg-current-ma = <2400>;
-#endif
 #endif
 			qcom,float-voltage-mv = <4400>;
 			qcom,resume-delta-mv = <200>;
@@ -337,11 +333,7 @@
 			status = "okay";
 			qcom,bcl-lm-threshold-ma = <127>;
 			qcom,bcl-mh-threshold-ma = <405>;
-#ifdef CONFIG_PRODUCT_Z2_X
-			qcom,fg-iterm-ma = <150>;
-#else
 			qcom,fg-iterm-ma = <125>;
-#endif
 			qcom,fg-chg-iterm-ma = <100>;
 			qcom,cycle-counter-en;
 			qcom,capacity-learning-on;
@@ -711,7 +703,7 @@
 						"flash0_trigger";
 				qcom,id = <0>;
 				qcom,duration = <1280>;
-#if defined(CONFIG_PRODUCT_Z2_PLUS)|| defined(CONFIG_PRODUCT_Z2_X)
+#if defined(CONFIG_PRODUCT_Z2_PLUS)
 				qcom,current = <800>;
 #else
 				qcom,current = <400>;

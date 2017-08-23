@@ -358,9 +358,6 @@
 	qcom,platform-reset-gpio = <&tlmm 8 0>;
 #ifdef CONFIG_PRODUCT_Z2_PLUS
 	qcom,platform-bklight-en-gpio = <&pm8994_gpios 22 0>;
-#elif defined CONFIG_PRODUCT_Z2_X
-	qcom,platform-te-gpio = <&tlmm 10 0>;
-	qcom,platform-bklight-en-gpio = <&tlmm 62 0>;
 #else
 	qcom,platform-te-gpio = <&tlmm 10 0>;
 	qcom,platform-enable-gpio = <&tlmm 76 0>;
@@ -547,11 +544,6 @@
 		#include "batterydata-z2_row-default-3000mah.dtsi"
 		#include "batterydata-z2_row-coslight-3000mah.dtsi"
 		#include "batterydata-z2_row-lgc-3000mah.dtsi"
-#elif defined CONFIG_PRODUCT_Z2_X
-		#include "batterydata-z2_x-default-3100mah-100k.dtsi"
-		#include "batterydata-z2_x-atl-3100mah-50k.dtsi"
-		#include "batterydata-z2_x-coslight-3000mah-9k.dtsi"
-		#include "batterydata-z2_x-coslight-3000mah-32k.dtsi"
 #else
 		#include "batterydata-z2_plus-default-3500mah.dtsi"
 		#include "batterydata-z2_plus-atl-3500mah.dtsi"
@@ -812,41 +804,6 @@
                 FF FF FF FF 90 01];
 		};		
 #endif
-#if defined CONFIG_PRODUCT_Z2_X
-	focaltech@38 {
-                        compatible = "focaltech,fts";
-                        reg = <0x38>;
-                        interrupt-parent = <&tlmm>;
-                        interrupts = <125 0x2008>;
-                        vdd-supply = <&pm8994_l22>;
-                        vcc_i2c-supply = <&pm8994_l18>;
-                        /* pins used by touchscreen */
-                        pinctrl-names = "ts_active","ts_suspend";
-                        pinctrl-0 = <&ts_active>;
-                        pinctrl-1 = <&ts_suspend>;
-						focaltech,name = "ft5436";
-                        focaltech,family-id = <0x06>;
-                        focaltech,reset-gpio = <&tlmm 9 0x0>;
-                        focaltech,irq-gpio = <&tlmm 125 0x2008>;
-                        focaltech,display-coords = <0 0 1080 1920>;
-                        focaltech,panel-coords = <0 0 1080 1920>;
-                        focaltech,button-map= <139 102 158>;
-                        focaltech,no-force-update;
-                        focaltech,i2c-pull-up;
-                        focaltech,group-id = <1>;
-                        focaltech,hard-reset-delay-ms = <2>;
-                        focaltech,soft-reset-delay-ms = <150>;
-                        focaltech,num-max-touches = <10>;
-                        focaltech,fw-delay-aa-ms = <30>;
-                        focaltech,fw-delay-55-ms = <30>;
-                        focaltech,fw-upgrade-id1 = <0x79>;
-                        focaltech,fw-upgrade-id2 = <0x08>;
-                        focaltech,fw-delay-readid-ms = <10>;
-                        focaltech,fw-delay-era-flsh-ms = <2000>;
-                               focaltech,fw-auto-cal;
-                        focaltech,ignore-id-check;
-                };
-#endif
 	};
 	i2c@75ba000 {
 		synaptics@20 {
@@ -872,7 +829,7 @@
 		};
 	};
 
-#if defined CONFIG_PRODUCT_Z2_ROW || defined CONFIG_PRODUCT_Z2_X
+#if defined CONFIG_PRODUCT_Z2_ROW
 	i2c@7579000 { /*this is for maxim_sensor max86100*/
 		status = "ok";
 		max86x00@57 {
@@ -911,14 +868,9 @@
 #elif defined CONFIG_PRODUCT_Z2_ROW
 			cc_logic,function-switch-gpio1 = <&tlmm 79 0x00>;
 			cc_logic,function-switch-gpio10 = <&tlmm 81 0x00>;
-#elif defined CONFIG_PRODUCT_Z2_X
-			cc_logic,function-switch-gpio1 = <&tlmm 82 0x00>;
-			cc_logic,function-switch-gpio10 = <&tlmm 121 0x00>;
 #endif
-#ifndef CONFIG_PRODUCT_Z2_X
 			cc_logic,function-switch-gpio2 = <&tlmm 33 0x00>;
-#endif
-#if (!defined(CONFIG_PRODUCT_Z2_ROW)) || (!defined(CONFIG_PRODUCT_Z2_X))
+#if (!defined(CONFIG_PRODUCT_Z2_ROW))
 			cc_logic,bypass-power-control = <&pm8994_gpios 10 0x00>;
 #endif
 
@@ -927,7 +879,7 @@
 			pinctrl-0 = <&cclogic_defaultnone_active &cclogic_defaulthigh_active &cclogic_hold_active>;
 			pinctrl-1 = <&cclogic_defaultnone_suspend &cclogic_defaulthigh_suspend &cclogic_hold_suspend>;
 
-#if defined CONFIG_PRODUCT_Z2_PLUS || defined CONFIG_PRODUCT_Z2_ROW || defined CONFIG_PRODUCT_Z2_X
+#if defined CONFIG_PRODUCT_Z2_PLUS || defined CONFIG_PRODUCT_Z2_ROW
 			cclogic,chip1 {
 				cc_logic,power-active-high;
 				chip-name = "pericom,pi5usb30216d";
@@ -946,7 +898,7 @@
 #endif
 		};
 
-#if defined CONFIG_PRODUCT_Z2_ROW || defined CONFIG_PRODUCT_Z2_X
+#if defined CONFIG_PRODUCT_Z2_ROW
 		drv2605_haptics@5a{
 			status = "okay";
 			compatible = "ti,drv2605l";
@@ -978,18 +930,6 @@
 	};
 #endif
 
-#ifdef CONFIG_PRODUCT_Z2_X
-    goodix_gx5116 {
-        compatible = "goodix,fingerprint";
-		interrupt-parent = <&tlmm>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&fpc_default>;
-		interrupts = <91 0x1>;
-		goodix,gpio_irq = <&tlmm 91 0x00>;
-		goodix,gpio_reset = <&tlmm 90 0x00>;
-		goodix,gpio_pwr =  <&tlmm 76 0x00>;
-	};
-#else
     fpc1020 {
         compatible = "fpc,fpc1020";
         interrupt-parent = <&tlmm>;
@@ -999,7 +939,6 @@
         fpc,gpio_irq = <&tlmm 91 0x00>;
         fpc,gpio_reset = <&tlmm 90 0x00>;
     };
-#endif
 
     gen-vkeys {
         compatible = "qcom,gen-vkeys";
