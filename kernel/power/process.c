@@ -221,7 +221,7 @@ int freeze_kernel_threads(void)
 	return error;
 }
 
-#ifdef CONFIG_PRODUCT_Z2_PLUS
+#if defined CONFIG_PRODUCT_Z2_PLUS || defined CONFIG_PRODUCT_Z2_ROW
 void thaw_fingerprintd(void)
 {
 	struct task_struct *p;
