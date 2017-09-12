@@ -167,6 +167,9 @@ static ssize_t get_key(struct device* device, struct device_attribute* attribute
 	return scnprintf(buffer, PAGE_SIZE, "%i\n", fpc1020->report_key);
 }
 
+static bool longtap = 1;
+module_param_named(longtap, longtap, bool, 0664);
+
 static ssize_t set_key(struct device* device,
 		struct device_attribute* attribute,
 		const char*buffer, size_t count)
@@ -178,8 +181,12 @@ static ssize_t set_key(struct device* device,
 
 	retval = kstrtou64(buffer, 0, &val);
 	if (!retval && !utouch_disable) {
-		if (val == KEY_HOME)
-			val = KEY_NAVI_LONG;  //Convert to U-touch long press keyValue
+		if (val == KEY_HOME) {
+			if (longtap)
+				val = KEY_NAVI_LONG;  //Convert to U-touch long press keyValue
+			else
+				return -ENOENT;
+		}
 
 	    home_pressed = home_button_pressed();
 
