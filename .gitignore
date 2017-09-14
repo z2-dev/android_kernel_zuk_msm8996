@@ -96,11 +96,3 @@ x509.genkey
 
 # Kconfig presets
 all.config
-<<<<<<< HEAD
-
-# Other shits
-
-anykernel/
-out/
-=======
->>>>>>> 40e4e89... .gitignore: Remove useless lines
