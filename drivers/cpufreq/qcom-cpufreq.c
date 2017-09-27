@@ -329,7 +329,7 @@ static struct cpufreq_driver msm_cpufreq_driver = {
 */
 #define UNDERCLOCKED_MAX_KHZ_PERFCL	1824000
 #define UNDERCLOCKED_MAX_KHZ_PWRCL	1478400
-static bool no_cpu_underclock = true;
+static bool no_cpu_underclock;
 
 static int __init get_cpu_underclock(char *unused)
 {
