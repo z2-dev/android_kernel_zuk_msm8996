@@ -29,6 +29,7 @@
 #include <linux/io.h>
 #include <linux/of_gpio.h>
 #include <linux/input.h>
+#include <linux/display_state.h>
 
 #define FPC1020_TOUCH_DEV_NAME  "fpc1020tp"
 
@@ -54,7 +55,6 @@ struct fpc1020_data {
 	struct wake_lock wake_lock;
 	struct wake_lock fp_wl;
 	int wakeup_status;
-	int screen_on;
 };
 
 /*
@@ -239,27 +239,11 @@ static ssize_t utouch_show_disable(struct device *dev,
 
 static DEVICE_ATTR(utouch_disable, S_IRUGO|S_IWUSR, utouch_show_disable, utouch_store_disable);
 
-static ssize_t get_screen_stat(struct device* device, struct device_attribute* attribute, char* buffer)
-{
-	struct fpc1020_data* fpc1020 = dev_get_drvdata(device);
-	return scnprintf(buffer, PAGE_SIZE, "%i\n", fpc1020->screen_on);
-}
-
-static ssize_t set_screen_stat(struct device* device,
-		struct device_attribute* attribute,
-		const char*buffer, size_t count)
-{
-	return 1;
-}
-
-static DEVICE_ATTR(screen, S_IRUSR | S_IWUSR, get_screen_stat, set_screen_stat);
-
 static struct attribute *attributes[] = {
 	&dev_attr_irq.attr,
 	&dev_attr_wakeup.attr,
 	&dev_attr_key.attr,
 	&dev_attr_wl.attr,
-	&dev_attr_screen.attr,
 	&dev_attr_utouch_disable.attr,
 	NULL
 };
@@ -272,7 +256,7 @@ static void fpc1020_report_work_func(struct work_struct *work)
 {
 	struct fpc1020_data *fpc1020 = NULL;
 	fpc1020 = container_of(work, struct fpc1020_data, input_report_work);
-	if (fpc1020->screen_on == 1) {
+	if (is_display_on()) {
 		pr_info("Report key value = %d\n", (int)fpc1020->report_key);
 		input_report_key(fpc1020->input_dev, fpc1020->report_key, 1);
 		input_sync(fpc1020->input_dev);
@@ -421,18 +405,7 @@ static int fb_notifier_callback(struct notifier_block *self, unsigned long event
 {
 	int *blank;
 	struct fb_event *evdata = data;
-	struct fpc1020_data *fpc1020 = container_of(self, struct fpc1020_data, fb_notif);
 	blank = evdata->data;
-	if (evdata && evdata->data && event == FB_EVENT_BLANK && fpc1020) {
-		blank = evdata->data;
-		if (*blank == FB_BLANK_UNBLANK) {
-			pr_err("ScreenOn\n");
-			fpc1020->screen_on = 1;
-		} else if (*blank == FB_BLANK_POWERDOWN) {
-			pr_err("ScreenOff\n");
-			fpc1020->screen_on = 0;
-		}
-	}
 	return 0;
 }
 
