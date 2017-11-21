@@ -4354,7 +4354,7 @@ int max86000_remove(struct i2c_client *client)
 
 static void max86000_shutdown(struct i2c_client *client)
 {
-	pr_info("%s\n", __func__);
+	pr_debug("%s\n", __func__);
 }
 
 static int max86000_pm_suspend(struct device *dev)
@@ -4377,7 +4377,7 @@ static int max86000_pm_suspend(struct device *dev)
 			atomic_set(&data->is_suspend, 2);
 		}
 	}
-	pr_info("%s\n", __func__);
+	pr_debug("%s\n", __func__);
 	return 0;
 }
 
@@ -4401,7 +4401,7 @@ static int max86000_pm_resume(struct device *dev)
 			atomic_set(&data->is_suspend, 0);
 		}
 	}
-	pr_info("%s\n", __func__);
+	pr_debug("%s\n", __func__);
 	return 0;
 }
 
