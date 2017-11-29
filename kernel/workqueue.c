@@ -1697,9 +1697,7 @@ static struct worker *create_worker(struct worker_pool *pool)
 		goto fail;
 
 	set_user_nice(worker->task, pool->attrs->nice);
-
-	/* prevent userland from meddling with cpumask of workqueue workers */
-	worker->task->flags |= PF_NO_SETAFFINITY;
+	worker->task->kthread_per_cpu = true;
 
 	/* successful, attach the worker to the pool */
 	worker_attach_to_pool(worker, pool);
