@@ -275,55 +275,6 @@ static struct dsi_cmd_desc * copy_mode_code(
 	return temp;
 }
 
-static int set_mode(struct msm_fb_data_type *mfd, struct panel_effect_data *panel_data, int index)
-{
-	struct lcd_cmds lcd_cmd;
-	struct dsi_cmd_desc *temp;
-	int cnt = 0;
-	int ret;
-
-	lcd_cmd.cmd = panel_data->buf;
-
-	temp = copy_head_code(panel_data, panel_data->buf, &cnt);
-	copy_mode_code(panel_data, temp, index, &cnt);
-
-	lcd_cmd.cnt = cnt;
-
-	ret = send_lcd_cmds(mfd, &lcd_cmd);
-	if (ret >= 0 || ret == -EPERM) {
-		panel_data->mode_data->current_mode = index;
-		lcd_effect_info("%s %s success\n", __func__, panel_data->mode_data->mode[index].name);
-		ret = 0;
-	}
-
-	return ret;
-}
-
-static int set_effect(struct msm_fb_data_type *mfd, struct panel_effect_data *panel_data, int index, int level)
-{
-	struct lcd_cmds lcd_cmd;
-	struct dsi_cmd_desc *temp;
-	int cnt = 0;
-	int ret;
-
-	lcd_cmd.cmd = panel_data->buf;
-
-	temp = copy_head_code(panel_data, panel_data->buf, &cnt);
-	copy_single_effect_code(panel_data, temp, index, level, &cnt);
-
-	lcd_cmd.cnt = cnt;
-
-	ret = send_lcd_cmds(mfd, &lcd_cmd);
-
-	if (ret >= 0 || ret == -EPERM) {
-		panel_data->effect_data->effect[index].level = level;
-		lcd_effect_info("%s name: [%s] level: [%d] success\n", __func__, panel_data->effect_data->effect[index].name, level);
-		ret = 0;
-	}
-
-	return ret;
-}
-
 int update_init_code(
 		struct mdss_dsi_ctrl_pdata *ctrl_pdata,
 		struct panel_effect_data *panel_data,
