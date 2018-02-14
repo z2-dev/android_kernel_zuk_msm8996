@@ -1773,7 +1773,7 @@ static void gt1x_ps_deinit(void)
 *			ESD Protect Module
 */
 #if GTP_ESD_PROTECT
-static int esd_work_cycle = 2000;
+static int esd_work_cycle = 8000;
 static struct delayed_work esd_check_work;
 static int esd_running = 0;
 static struct mutex esd_lock;
